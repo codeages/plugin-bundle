@@ -16,7 +16,7 @@ class AppDaoImpl extends GeneralDaoImpl implements AppDao
 
     public function findByType($type, $start, $limit)
     {
-        return $this->search(('type' => $type), array('created_time' => 'ASC'), $start, $limit);
+        return $this->search(array('type' => $type), array('created_time' => 'ASC'), $start, $limit);
     }
 
     public function countByType($type)
