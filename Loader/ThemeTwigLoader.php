@@ -69,6 +69,6 @@ class ThemeTwigLoader extends \Twig_Loader_Filesystem
 
     protected function isAppResourceFile($file)
     {
-        return strpos((string)$file, 'Bundle') === false && strpos((string)$file, '@') !== 0;
+        return strpos((string)$file, '@') !== 0 && strpos((string)$file, ':') === false;
     }
 }
