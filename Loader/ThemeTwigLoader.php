@@ -44,7 +44,7 @@ class ThemeTwigLoader extends \Twig_Loader_Filesystem
 
         if ($this->isAppResourceFile($file)) {
             $themeDir = $this->kernel->getPluginConfigurationManager()->getActiveThemeDirectory();
-            $file     = $themeDir . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . $file;
+            $file     = $themeDir.'/views/'.$file;
         }
 
         if (is_file($file)) {
@@ -57,7 +57,7 @@ class ThemeTwigLoader extends \Twig_Loader_Filesystem
     protected function getCustomFile($file)
     {
         if ($this->isAppResourceFile($file)) {
-            return $this->kernel->getRootDir() . DIRECTORY_SEPARATOR .'..' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Custom' . DIRECTORY_SEPARATOR . 'Resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . $file;
+            $file = $this->kernel->getRootDir().'/../src/Custom/Resources/views/'.$file;
         }
 
         if (is_file($file)) {
