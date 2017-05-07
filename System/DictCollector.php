@@ -22,33 +22,34 @@ class DictCollector
 
             foreach ($files as $file) {
                 $resources[] = new FileResource($file);
-                $dict = array_merge($dict, Yaml::parse(file_get_contents($file)));
+                $fileParts = explode('.',$file);
+                $locale = $fileParts[1];
+                $localeDict = isset($dict[$locale]) ? $dict[$locale] : array();
+                $dict[$locale] = array_merge($localeDict,Yaml::parse(file_get_contents($file)));
             }
-
             $cache->write(sprintf('<?php return %s;', var_export($dict, true)), $resources);
-
             $this->dict = $dict;
         } else {
             $this->dict = require $cacheFile;
         }
     }
 
-    public function getDictText($name, $key, $default = '')
+    public function getDictText($locale,$name, $key, $default = '')
     {
-        if (!isset($this->dict[$name][$key])) {
+        if (!isset($this->dict[$locale][$name][$key])) {
             return $default;
         }
 
-        return (string)($this->dict[$name][$key]);
+        return (string)($this->dict[$locale][$name][$key]);
     }
 
-    public function getDictMap($name)
+    public function getDictMap($locale,$name)
     {
-        if (!isset($this->dict[$name])) {
+        if (!isset($this->dict[$locale][$name])) {
             return array();
         }
 
-        return (array)($this->dict[$name]);
+        return (array)($this->dict[$locale][$name]);
     }
 
 }

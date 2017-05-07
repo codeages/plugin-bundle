@@ -38,18 +38,21 @@ class CodeagesPluginExtension extends Extension
     {
         $files = array();
 
+        $locales = $container->getParameter('app.locales');
+        $locales = explode('|',$locales);
         foreach ($bundles as $bundleClass) {
             $refClass = new \ReflectionClass($bundleClass);
-            $file = dirname($refClass->getFileName()) . '/Resources/config/dict.yml';
-
-
-            if (file_exists($file) === true) {
-                $files[] = $file;
+            foreach ($locales as $locale){
+                $file = dirname($refClass->getFileName()) . "/Resources/config/dict.{$locale}.yml";
+                if (file_exists($file) === true) {
+                    $files[] = $file;
+                }
             }
         }
-        
+
         $collector = $container->getDefinition('codeages_plugin.dict_collector');
         $collector->replaceArgument(0, $files);
+
     }
 
     public function loadSlots($bundles, $container)

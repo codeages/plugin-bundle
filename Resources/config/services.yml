@@ -38,6 +38,7 @@ services:
         public: true
         arguments:
             - "@codeages_plugin.dict_collector"
+            - "%locale%"
         tags:
             - { name: twig.extension }
 
