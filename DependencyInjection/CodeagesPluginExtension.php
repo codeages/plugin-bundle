@@ -37,22 +37,25 @@ class CodeagesPluginExtension extends Extension
     public function loadDicts($bundles, $container)
     {
         $files = array();
-
-        $locales = $container->getParameter('app.locales');
-        $locales = explode('|',$locales);
         foreach ($bundles as $bundleClass) {
             $refClass = new \ReflectionClass($bundleClass);
-            foreach ($locales as $locale){
-                $file = dirname($refClass->getFileName()) . "/Resources/config/dict.{$locale}.yml";
+            $fileDir = dirname($refClass->getFileName()) . "/Resources/config";
+            if(file_exists($fileDir) === false){
+                continue;
+            }
+            $finder = Finder::create()
+                ->files()
+                ->name('dict.*.yml')
+                ->in($fileDir);
+            foreach ($finder as $file){
+                $file = $file->getRealPath();
                 if (file_exists($file) === true) {
                     $files[] = $file;
                 }
             }
         }
-
         $collector = $container->getDefinition('codeages_plugin.dict_collector');
         $collector->replaceArgument(0, $files);
-
     }
 
     public function loadSlots($bundles, $container)
