@@ -9,21 +9,21 @@ use Symfony\Component\Config\Resource\FileResource;
 
 class DictCollector
 {
-    protected $dict = array();
-    protected $locale_fallback;
+    protected $locale;
     protected $cacheDir;
     protected $debug;
     protected $files;
 
-    public function __construct(array $files, $cacheDir, $debug,$locale_fallback)
+    public function __construct(array $files, $cacheDir, $debug, $locale)
     {
         $this->files = $files;
         $this->cacheDir = $cacheDir;
         $this->debug = $debug;
-        $this->locale_fallback = $locale_fallback;
+        $this->locale = $locale;
     }
 
-    private function  loadDictFile(){
+    private function  loadDictFile()
+    {
         $resources = array();
         $dict = array();
         $defaultDict = array();
@@ -36,7 +36,7 @@ class DictCollector
             $localeDict = isset($dict[$locale]) ? $dict[$locale] : array();
             $dict[$locale] = array_merge($localeDict,Yaml::parse(file_get_contents($file)));
 
-            if($locale == $this->locale_fallback){
+            if($locale == $this->locale){
                 $defaultDict = array_merge($defaultDict,Yaml::parse(file_get_contents($file)));
             }
         }
@@ -44,44 +44,48 @@ class DictCollector
         $this->cacheDictFile($dict,$defaultDict,$resources);
     }
 
-    private function  cacheDictFile($dict,$defaultDict,$resources){
+    private function  cacheDictFile($dict,$defaultDict,$resources)
+    {
         foreach ($dict as $key => $localDict){
             $cacheFile = $this->cacheDir . "/dict.{$key}.php";
             $cache = new ConfigCache($cacheFile, $this->debug);
-            if($key != $this->locale_fallback){
+            if($key != $this->locale){
                 $localDict = array_merge($defaultDict,$localDict);
             }
             $cache->write(sprintf('<?php return %s;', var_export($localDict, true)), $resources);
         }
     }
 
-    private function  getDict($userLocale){
+    private function  getDict($userLocale)
+    {
         $userLocaleCacheFile = $this->cacheDir . "/dict.{$userLocale}.php";
-        $cache = new ConfigCache(locale_fallback, $this->debug);
+        $cache = new ConfigCache($userLocaleCacheFile, $this->debug);
         if ($cache->isFresh() === false) {
-             $this->loadDictFile();
+            $this->loadDictFile();
         }
-        $this->dict = require $userLocaleCacheFile;
+        $dict = require $userLocaleCacheFile;
+        return $dict;
+
     }
 
     public function getDictText($userLocale,$name, $key, $default = '')
     {
-        $this->dict = $this->getDict($userLocale);
-        if (!isset($this->dict[$name][$key])) {
+        $dict = $this->getDict($userLocale);
+        if (!isset($dict[$name][$key])) {
             return $default;
         }
 
-        return (string)($this->dict[$name][$key]);
+        return (string)($dict[$name][$key]);
     }
 
     public function getDictMap($userLocale,$name)
     {
-        $this->dict = $this->getDict($userLocale);
-        if (!isset($this->dict[$name])) {
+        $dict = $this->getDict($userLocale);
+        if (!isset($dict[$name])) {
             return array();
         }
-
-        return (array)($this->dict[$name]);
+        return (array)($dict[$name]);
     }
+
 
 }

@@ -5,7 +5,7 @@ services:
             - []
             - "%kernel.cache_dir%"
             - "%kernel.debug%"
-            - "%locale_fallback%"
+            - "%locale%"
 
     codeages_plugin.slot_collector:
         class: Codeages\PluginBundle\System\Slot\SlotInjectionCollector
@@ -39,7 +39,7 @@ services:
         public: true
         arguments:
             - "@codeages_plugin.dict_collector"
-            - "@request_stack"
+            - "@service_container"
 
         tags:
             - { name: twig.extension }
