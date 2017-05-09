@@ -2,7 +2,6 @@
 
 namespace Codeages\PluginBundle\System;
 
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
@@ -22,70 +21,69 @@ class DictCollector
         $this->locale = $locale;
     }
 
-    private function  loadDictFile()
+    private function loadDictFile()
     {
         $resources = array();
         $dict = array();
         $defaultDict = array();
 
         foreach ($this->files as $file) {
-            $fileParts = explode('.',$file);
+            $fileParts = explode('.', $file);
             $locale = $fileParts[1];
             $resources[] = new FileResource($file);
 
             $localeDict = isset($dict[$locale]) ? $dict[$locale] : array();
-            $dict[$locale] = array_merge($localeDict,Yaml::parse(file_get_contents($file)));
+            $dict[$locale] = array_merge($localeDict, Yaml::parse(file_get_contents($file)));
 
-            if($locale == $this->locale){
-                $defaultDict = array_merge($defaultDict,Yaml::parse(file_get_contents($file)));
+            if ($locale == $this->locale) {
+                $defaultDict = array_merge($defaultDict, Yaml::parse(file_get_contents($file)));
             }
         }
 
-        $this->cacheDictFile($dict,$defaultDict,$resources);
+        $this->cacheDictFile($dict, $defaultDict, $resources);
     }
 
-    private function  cacheDictFile($dict,$defaultDict,$resources)
+    private function cacheDictFile($dict, $defaultDict, $resources)
     {
-        foreach ($dict as $key => $localDict){
-            $cacheFile = $this->cacheDir . "/dict.{$key}.php";
+        foreach ($dict as $key => $localDict) {
+            $cacheFile = $this->cacheDir."/dict.{$key}.php";
             $cache = new ConfigCache($cacheFile, $this->debug);
-            if($key != $this->locale){
-                $localDict = array_merge($defaultDict,$localDict);
+            if ($key != $this->locale) {
+                $localDict = array_merge($defaultDict, $localDict);
             }
             $cache->write(sprintf('<?php return %s;', var_export($localDict, true)), $resources);
         }
     }
 
-    private function  getDict($userLocale)
+    private function getDict($userLocale)
     {
-        $userLocaleCacheFile = $this->cacheDir . "/dict.{$userLocale}.php";
+        $userLocaleCacheFile = $this->cacheDir."/dict.{$userLocale}.php";
         $cache = new ConfigCache($userLocaleCacheFile, $this->debug);
         if ($cache->isFresh() === false) {
             $this->loadDictFile();
         }
         $dict = require $userLocaleCacheFile;
-        return $dict;
 
+        return $dict;
     }
 
-    public function getDictText($userLocale,$name, $key, $default = '')
+    public function getDictText($userLocale, $name, $key, $default = '')
     {
         $dict = $this->getDict($userLocale);
         if (!isset($dict[$name][$key])) {
             return $default;
         }
 
-        return (string)($dict[$name][$key]);
+        return (string) ($dict[$name][$key]);
     }
 
-    public function getDictMap($userLocale,$name)
+    public function getDictMap($userLocale, $name)
     {
         $dict = $this->getDict($userLocale);
         if (!isset($dict[$name])) {
             return array();
         }
-        return (array)($dict[$name]);
+
+        return (array) ($dict[$name]);
     }
-
-
 }
