@@ -65,7 +65,7 @@ class DictCollector
             }
             $cache->write(sprintf('<?php return %s;', var_export($localDict, true)), $resources[$key]);
             if($this->locale == $key){
-                $this->dict = $dict;
+                $this->dict = $localDict;
             }
         }
     }
