@@ -23,14 +23,14 @@ class DictExtension extends \Twig_Extension
 
     public function getDict($name)
     {
-        $this->getLocale();
-        return $this->collector->getDictMap($this->locale,$name);
+        $locale = $this->getLocale();
+        return $this->collector->getDictMap($locale,$name);
     }
 
     public function getDictText($name, $key, $default = '')
     {
-        $this->getLocale();
-        return $this->collector->getDictText($this->locale,$name, $key, $default);
+        $locale= $this->getLocale();
+        return $this->collector->getDictText($locale,$name, $key, $default);
     }
 
     public function getName()
@@ -40,9 +40,10 @@ class DictExtension extends \Twig_Extension
 
     private function getLocale()
     {
-        if($this->locale){
-            return ;
+        if(!$this->locale){
+            $locale = $this->container->get('request')->getLocale();
+            $this->locale = $locale ;
         }
-        $this->locale = $this->container->get('request')->getLocale();
+        return $this->locale;
     }
 }
