@@ -29,8 +29,10 @@ class DictCollector
         $defaultDict = array();
 
         foreach ($this->files as $file) {
-            $fileParts = explode('.',$file);
-            $locale = $fileParts[1];
+            $pathinfo = pathinfo($file);
+            $filename = $pathinfo['filename'];
+            $filenameParts = explode('.', $filename);
+            $locale = $filenameParts[1];
             $resources[] = new FileResource($file);
 
             $localeDict = isset($dict[$locale]) ? $dict[$locale] : array();
