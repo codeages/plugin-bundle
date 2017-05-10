@@ -13,13 +13,12 @@ class PluginConfigurationManager
     public function __construct($rootDir)
     {
         $this->rootDir = rtrim($rootDir, "\/");
-        $this->filepath = $this->rootDir . '/config/plugin.php';
+        $this->filepath = $this->rootDir.'/config/plugin.php';
         if (!file_exists($this->filepath)) {
             $this->config = array();
         } else {
             $this->config = require $this->filepath;
         }
-
     }
 
     public function getActiveThemeName()
@@ -40,6 +39,7 @@ class PluginConfigurationManager
     public function setActiveThemeName($name)
     {
         $this->config['active_theme_name'] = $name;
+
         return $this;
     }
 
@@ -51,6 +51,7 @@ class PluginConfigurationManager
     public function setInstalledPlugins($plugins)
     {
         $this->config['installed_plugins'] = $plugins;
+
         return $this;
     }
 
@@ -79,7 +80,7 @@ class PluginConfigurationManager
 
     public function save()
     {
-        $content = "<?php \n return " . var_export($this->config, true) . ";";
+        $content = "<?php \n return ".var_export($this->config, true).';';
         $saved = file_put_contents($this->filepath, $content);
 
         if ($saved === false) {
@@ -89,4 +90,17 @@ class PluginConfigurationManager
         return $this;
     }
 
+    public function isPluginInstalled($code)
+    {
+        $plugins = $this->getInstalledPlugins();
+        $code = strtolower($code);
+
+        foreach ($plugins as $plugin) {
+            if ($code == strtolower($plugin['code'])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

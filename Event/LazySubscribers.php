@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Codeages\PluginBundle\Event;
-
 
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
@@ -15,6 +13,9 @@ class LazySubscribers
      */
     private $container;
 
+    /**
+     * @var string[]
+     */
     private $services = array();
 
     /**
@@ -27,7 +28,7 @@ class LazySubscribers
         $this->container = $container;
 
         $kernel = $this->container->get('kernel');
-        $cacheFile = $kernel->getCacheDir() . DIRECTORY_SEPARATOR . '/event_map.php';
+        $cacheFile = $kernel->getCacheDir().DIRECTORY_SEPARATOR.'/event_map.php';
         $this->cache = new ConfigCache($cacheFile, $kernel->isDebug());
     }
 
@@ -44,11 +45,11 @@ class LazySubscribers
     {
         $eventMap = $this->getEventMap();
 
-        if(isset($eventMap[$eventName])){
+        if (isset($eventMap[$eventName])) {
             return $eventMap[$eventName];
-        }else{
-            return array();
         }
+
+        return array();
     }
 
     /**
@@ -59,13 +60,15 @@ class LazySubscribers
     public function addSubscriberService($service)
     {
         $this->services[] = $service;
+
         return $this;
     }
 
-    protected function getEventMap(){
+    protected function getEventMap()
+    {
         $this->generateCache();
-        $eventMap = require $this->cache->getPath();
-        return $eventMap;
+
+        return require $this->cache->getPath();
     }
 
     public function generateCache()
@@ -79,22 +82,27 @@ class LazySubscribers
         $eventMap = array();
 
         foreach ($this->services as $service) {
+            /**
+             * @var EventSubscriber
+             */
             $class = $this->container->get($service);
-            $events = forward_static_call(array($class, 'getSubscribedEvents'));
-            foreach ($events as $eventName => $callback) {
-                $eventMap[$eventName][] = array($service, $callback);
-            }
-        }
 
-        $biz = $this->container->get('biz');
-        foreach ($biz['subscribers'] as $subscriber) {
-            $events = forward_static_call(array($subscriber, 'getSubscribedEvents'));
-            foreach ($events as $eventName => $callback) {
-                $eventMap[$eventName][] = array($subscriber, $callback);
+            /**
+             * @var array<string, string|array>
+             */
+            $events = forward_static_call(array($class, 'getSubscribedEvents'));
+
+            foreach ($events as $eventName => $callbacks) {
+                if (is_array($callbacks)) {
+                    array_walk($callbacks, function ($callback) use (&$eventMap, $eventName, $service) {
+                        $eventMap[$eventName][] = array($service, $callback);
+                    });
+                } else {
+                    $eventMap[$eventName][] = array($service, $callbacks);
+                }
             }
         }
 
         $this->cache->write(sprintf('<?php return %s;', var_export($eventMap, true)), array($file));
     }
-
 }

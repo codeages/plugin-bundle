@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeages\PluginBundle\Twig;
 
 class DictExtension extends \Twig_Extension
@@ -7,7 +8,7 @@ class DictExtension extends \Twig_Extension
     protected $locale;
     protected $container;
 
-    public function __construct($collector,$container)
+    public function __construct($collector, $container)
     {
         $this->collector = $collector;
         $this->container = $container;
@@ -24,13 +25,15 @@ class DictExtension extends \Twig_Extension
     public function getDict($name)
     {
         $locale = $this->getLocale();
-        return $this->collector->getDictMap($locale,$name);
+
+        return $this->collector->getDictMap($locale, $name);
     }
 
     public function getDictText($name, $key, $default = '')
     {
-        $locale= $this->getLocale();
-        return $this->collector->getDictText($locale,$name, $key, $default);
+        $locale = $this->getLocale();
+
+        return $this->collector->getDictText($locale, $name, $key, $default);
     }
 
     public function getName()
@@ -40,10 +43,11 @@ class DictExtension extends \Twig_Extension
 
     private function getLocale()
     {
-        if(!$this->locale){
+        if (!$this->locale) {
             $locale = $this->container->get('request')->getLocale();
-            $this->locale = $locale ;
+            $this->locale = $locale;
         }
+
         return $this->locale;
     }
 }
