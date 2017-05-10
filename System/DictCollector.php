@@ -29,11 +29,11 @@ class DictCollector
         $defaultDict = array();
 
         foreach ($this->files as $file) {
-            $pathinfo = pathinfo($file);
-            $filename = $pathinfo['filename'];
-            $filenameParts = explode('.', $filename);
-            $locale = $filenameParts[1];
             $resources[] = new FileResource($file);
+
+            $basename = basename($file);
+            $basenameParts = explode('.', $basename);
+            $locale = $basenameParts[1];
 
             $localeDict = isset($dict[$locale]) ? $dict[$locale] : array();
             $dict[$locale] = array_merge($localeDict,Yaml::parse(file_get_contents($file)));
