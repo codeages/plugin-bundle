@@ -62,7 +62,7 @@ class PluginCreateCommand extends GeneratorCommand
             "description": "",
             "author": "EduSoho官方",
             "version": "1.0.0",
-            "support_version": "1.0.0"
+            "support_version": "8.0.0"
         }';
 
         file_put_contents($filename, $data);
