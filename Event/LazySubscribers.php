@@ -94,13 +94,21 @@ class LazySubscribers
 
             foreach ($events as $eventName => $callbacks) {
                 if (is_array($callbacks)) {
-                    array_walk($callbacks, function ($callback) use (&$eventMap, $eventName, $service) {
-                        $eventMap[$eventName][] = array($service, $callback);
-                    });
+                    $eventMap[$eventName][] = array($service, $callbacks[0], $callbacks[1]);
                 } else {
-                    $eventMap[$eventName][] = array($service, $callbacks);
+                    $eventMap[$eventName][] = array($service, $callbacks, 0);
                 }
             }
+        }
+
+        foreach ($eventMap as $eventName => &$callbacks) {
+            uasort($callbacks, function ($x, $y) {
+                if ($x[2] == $y[2]) {
+                    return 0;
+                }
+
+                return ($x[2] < $y[2]) ? -1 : 1;
+            });
         }
 
         $this->cache->write(sprintf('<?php return %s;', var_export($eventMap, true)), array($file));
