@@ -96,7 +96,7 @@ class LazySubscribers
                 if (is_array($callbacks)) {
                     $eventMap[$eventName][] = array($service, $callbacks[0], $callbacks[1]);
                 } else {
-                    $eventMap[$eventName][] = array($service, $callbacks, 0);
+                    $eventMap[$eventName][] = array($service, $callbacks, 255);
                 }
             }
         }
@@ -109,6 +109,8 @@ class LazySubscribers
 
                 return ($x[2] > $y[2]) ? -1 : 1;
             });
+
+            $callbacks = array_values($callbacks);
         }
 
         $this->cache->write(sprintf('<?php return %s;', var_export($eventMap, true)), array($file));
