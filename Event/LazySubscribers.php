@@ -107,7 +107,7 @@ class LazySubscribers
                     return 0;
                 }
 
-                return ($x[2] < $y[2]) ? -1 : 1;
+                return ($x[2] > $y[2]) ? -1 : 1;
             });
         }
 
