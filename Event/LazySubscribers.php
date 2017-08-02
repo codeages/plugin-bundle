@@ -8,6 +8,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class LazySubscribers
 {
+
+    const DEFAULT_PRIORITY = 0;
     /**
      * @var ContainerInterface
      */
@@ -96,7 +98,7 @@ class LazySubscribers
                 if (is_array($callbacks)) {
                     $eventMap[$eventName][] = array($service, $callbacks[0], $callbacks[1]);
                 } else {
-                    $eventMap[$eventName][] = array($service, $callbacks, 255);
+                    $eventMap[$eventName][] = array($service, $callbacks, self::DEFAULT_PRIORITY);
                 }
             }
         }
