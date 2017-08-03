@@ -45,31 +45,40 @@ class LazySubscribersTest extends TestCase
         }
 
         $test1 = array(
-            0 => array(0 => 'test_two_event_subscribers', 1 => 'onTest1', 2 => 0),
-            1 => array(0 => 'test_one_event_subscribers', 1 => 'onTest1', 2 => 0),
-        );
-        $test2 = array(0 => array(
-                    0 => 'test_two_event_subscribers',
-                    1 => 'onTest2',
-                    2 => 0,
-                ),
+            0 => array(
+                0 => 'test_two_event_subscribers',
+                1 => 'onTest1',
+                2 => 0
+            ),
             1 => array(
-                    0 => 'test_one_event_subscribers',
-                    1 => 'onTest2',
-                    2 => -100,
-                ),
+                0 => 'test_one_event_subscribers',
+                1 => 'onTest1',
+                2 => 0
+            ),
+        );
+        $test2 = array(
+            0 => array(
+                0 => 'test_two_event_subscribers',
+                1 => 'onTest2',
+                2 => 0
+            ),
+            1 => array(
+                0 => 'test_one_event_subscribers',
+                1 => 'onTest2',
+                2 => -100,
+            ),
         );
         $test3 = array(
             0 => array(
-                    0 => 'test_one_event_subscribers',
-                    1 => 'onTest3',
-                    2 => 100,
-                ),
+                0 => 'test_one_event_subscribers',
+                1 => 'onTest3',
+                2 => 100,
+            ),
             1 => array(
-                    0 => 'test_two_event_subscribers',
-                    1 => 'onTest3',
-                    2 => 0,
-                ),
+                0 => 'test_two_event_subscribers',
+                1 => 'onTest3',
+                2 => 0,
+            ),
         );
 
         $test1Callbacks = $lazySubscribers->getCallbacks('test1');
@@ -84,7 +93,6 @@ class LazySubscribersTest extends TestCase
         $cacheFileDir = __DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'cache';
         unlink($cacheFileDir.DIRECTORY_SEPARATOR.'event_map.php');
         unlink($cacheFileDir.DIRECTORY_SEPARATOR.'event_map.php.meta');
-
     }
 
     private function mockKernel()
