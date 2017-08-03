@@ -30,7 +30,7 @@ class LazySubscribers
         $this->container = $container;
 
         $kernel = $this->container->get('kernel');
-        $cacheFile = $kernel->getCacheDir().DIRECTORY_SEPARATOR.'/event_map.php';
+        $cacheFile = $kernel->getCacheDir().DIRECTORY_SEPARATOR.'event_map.php';
         $this->cache = new ConfigCache($cacheFile, $kernel->isDebug());
     }
 

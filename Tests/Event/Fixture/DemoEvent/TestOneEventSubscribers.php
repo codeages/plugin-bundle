@@ -11,8 +11,8 @@ class TestOneEventSubscribers implements EventSubscriberInterface
     {
         return array(
             'test1' => 'onTest1',
-            'test2' => 'onTest2',
-            'test3' => 'onTest3',
+            'test2' => array('onTest2', -100),
+            'test3' => array('onTest3', 100),
         );
     }
 

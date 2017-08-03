@@ -23,7 +23,6 @@ class LazySubscribersTest extends TestCase
             ->getMockForAbstractClass();
         $lazySubscribers->method('getEventMap')
             ->willReturn(array());
-
     }
 
     public function testGetCallbacks()
@@ -31,7 +30,6 @@ class LazySubscribersTest extends TestCase
         $services = array(
             'test_one_event_subscribers' => array(0 => array()),
             'test_two_event_subscribers' => array(0 => array()),
-
         );
         $kernel = $this->mockKernel();
 
@@ -46,22 +44,53 @@ class LazySubscribersTest extends TestCase
             $lazySubscribers->addSubscriberService($id);
         }
 
-        $cacheFilePath = __DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'event_map.php';
-        $eventMap = array();
-//        try{
-            $lazySubscribers->generateCache();
-//        }catch (\Exception $e) {
-//            var_dump($e->getMessage());
-//
-//        }
-        var_dump($eventMap);
+        $test1 = array(
+            0 => array(0 => 'test_two_event_subscribers', 1 => 'onTest1', 2 => 0),
+            1 => array(0 => 'test_one_event_subscribers', 1 => 'onTest1', 2 => 0),
+        );
+        $test2 = array(0 => array(
+                    0 => 'test_two_event_subscribers',
+                    1 => 'onTest2',
+                    2 => 0,
+                ),
+            1 => array(
+                    0 => 'test_one_event_subscribers',
+                    1 => 'onTest2',
+                    2 => -100,
+                ),
+        );
+        $test3 = array(
+            0 => array(
+                    0 => 'test_one_event_subscribers',
+                    1 => 'onTest3',
+                    2 => 100,
+                ),
+            1 => array(
+                    0 => 'test_two_event_subscribers',
+                    1 => 'onTest3',
+                    2 => 0,
+                ),
+        );
+
+        $test1Callbacks = $lazySubscribers->getCallbacks('test1');
+        $this->assertEquals($test1, $test1Callbacks);
+
+        $test2Callbacks = $lazySubscribers->getCallbacks('test2');
+        $this->assertEquals($test2, $test2Callbacks);
+
+        $test3Callbacks = $lazySubscribers->getCallbacks('test3');
+        $this->assertEquals($test3, $test3Callbacks);
+
+        $cacheFileDir = __DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'cache';
+        unlink($cacheFileDir.DIRECTORY_SEPARATOR.'event_map.php');
+        unlink($cacheFileDir.DIRECTORY_SEPARATOR.'event_map.php.meta');
 
     }
 
     private function mockKernel()
     {
         $testKernel = $this->getMockBuilder('Codeages\PluginBundle\Tests\Event\Fixture\TestKernel')
-            ->setConstructorArgs(array('test',false))
+            ->setConstructorArgs(array('test', false))
             ->setMethods(array('getCacheDir'))
             ->getMockForAbstractClass();
 
@@ -70,6 +99,4 @@ class LazySubscribersTest extends TestCase
 
         return $testKernel;
     }
-
-
 }
