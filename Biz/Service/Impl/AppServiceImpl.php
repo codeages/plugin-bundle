@@ -23,7 +23,7 @@ class AppServiceImpl extends BaseService implements AppService
             return array();
         }
 
-        return $this->getAppDao()->findByType(array('plugin', 'theme'), 0, $total);
+        return $this->getAppDao()->findByTypes(array('plugin', 'theme'), 0, $total);
     }
 
     public function registerPlugin($plugin)

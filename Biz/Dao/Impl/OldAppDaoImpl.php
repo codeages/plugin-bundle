@@ -1,11 +1,10 @@
 <?php
-
 namespace Codeages\PluginBundle\Biz\Dao\Impl;
 
 use Codeages\Biz\Framework\Dao\GeneralDaoImpl;
-use Codeages\PluginBundle\Biz\Dao\AppDao;
+use Codeages\PluginBundle\Biz\Dao\OldAppDao;
 
-class OldAppDaoImpl extends GeneralDaoImpl implements AppDao
+class OldAppDaoImpl extends GeneralDaoImpl implements OldAppDao
 {
     protected $table = 'cloud_app';
 
@@ -14,14 +13,14 @@ class OldAppDaoImpl extends GeneralDaoImpl implements AppDao
         return $this->getByFields(array('code' => $code));
     }
 
-    public function findByType($type, $start, $limit)
+    public function findByTypes($types = array(), $start, $limit)
     {
-        return $this->search(array('type' => $type), array('installedTime' => 'ASC'), $start, $limit);
+        return $this->search(array('types' => $types), array('installedTime' => 'ASC'), $start, $limit);
     }
 
-    public function countByType($type)
+    public function countByTypes($types = array())
     {
-        return $this->count(array('type' => $type));
+        return $this->count(array('types' => $types));
     }
 
     public function declares()
@@ -33,6 +32,7 @@ class OldAppDaoImpl extends GeneralDaoImpl implements AppDao
             'conditions' => array(
                 'type = :type',
                 'name = :name',
+                'type IN ( :types)'
             ),
         );
     }
