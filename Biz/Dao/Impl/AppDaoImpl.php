@@ -4,6 +4,7 @@ namespace Codeages\PluginBundle\Biz\Dao\Impl;
 use Codeages\Biz\Framework\Dao\GeneralDaoImpl;
 use Codeages\PluginBundle\Biz\Dao\AppDao;
 
+
 class AppDaoImpl extends GeneralDaoImpl implements AppDao
 {
     protected $table = 'app';
@@ -13,14 +14,14 @@ class AppDaoImpl extends GeneralDaoImpl implements AppDao
         return $this->getByFields(array('code' => $code));
     }
 
-    public function findByType($types, $start, $limit)
+    public function findByType($type, $start, $limit)
     {
-        return $this->search(array('types' => $types), array('created_time' => 'ASC'), $start, $limit);
+        return $this->search(array('type' => $type), array('created_time' => 'ASC'), $start, $limit);
     }
 
-    public function countByType($types)
+    public function countByType($type)
     {
-        return $this->count(array('types' => $types));
+        return $this->count(array('type' => $type));
     }
 
     public function declares()
@@ -32,7 +33,6 @@ class AppDaoImpl extends GeneralDaoImpl implements AppDao
             'conditions' => array(
                 'type = :type',
                 'name = :name',
-                'type IN ( :types)'
             ),
         );
     }
