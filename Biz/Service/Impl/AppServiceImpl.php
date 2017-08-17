@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeages\PluginBundle\Biz\Service\Impl;
 
 use Codeages\PluginBundle\Biz\Service\AppService;
@@ -19,12 +18,12 @@ class AppServiceImpl extends BaseService implements AppService
 
     public function findAllPlugins()
     {
-        $total = $this->getAppDao()->countByType('plugin');
+        $total = $this->getAppDao()->countByTypes(array('plugin', 'theme'));
         if (empty($total)) {
             return array();
         }
 
-        return $this->getAppDao()->findByType('plugin', 0, $total);
+        return $this->getAppDao()->findByType(array('plugin', 'theme'), 0, $total);
     }
 
     public function registerPlugin($plugin)

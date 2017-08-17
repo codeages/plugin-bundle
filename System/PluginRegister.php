@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeages\PluginBundle\System;
 
 use Symfony\Component\Process\Process;
@@ -16,7 +15,7 @@ class PluginRegister
     public function __construct($rootDir, $pluginBaseDir, $biz = null)
     {
         $this->rootDir = rtrim($rootDir, "\/");
-        $this->pluginRootDir = $this->rootDir."/{$pluginBaseDir}";
+        $this->pluginRootDir = $this->rootDir . "/{$pluginBaseDir}";
         $this->biz = $biz;
     }
 
@@ -52,7 +51,7 @@ class PluginRegister
 
     public function executeDatabaseScript($code)
     {
-        $file = $this->getPluginDirectory($code).DIRECTORY_SEPARATOR.'Scripts'.DIRECTORY_SEPARATOR.'database.sql';
+        $file = $this->getPluginDirectory($code) . DIRECTORY_SEPARATOR . 'Scripts' . DIRECTORY_SEPARATOR . 'database.sql';
         if (!file_exists($file)) {
             return false;
         }
@@ -64,7 +63,7 @@ class PluginRegister
 
     public function executeScript($code)
     {
-        $file = $this->getPluginDirectory($code).DIRECTORY_SEPARATOR.'Scripts'.DIRECTORY_SEPARATOR.'InstallScript.php';
+        $file = $this->getPluginDirectory($code) . DIRECTORY_SEPARATOR . 'Scripts' . DIRECTORY_SEPARATOR . 'InstallScript.php';
         if (!file_exists($file)) {
             return false;
         }
@@ -87,11 +86,11 @@ class PluginRegister
 
         $phpArgs = implode(' ', array_map('escapeshellarg', $this->getPhpArguments()));
 
-        $consoleDir = dirname($this->pluginRootDir).'/app';
-        $console = escapeshellarg($consoleDir.'/console');
+        $consoleDir = dirname($this->pluginRootDir) . '/app';
+        $console = escapeshellarg($consoleDir . '/console');
         $cmd = 'assets:install --symlink --relative web';
 
-        $process = new Process($php.($phpArgs ? ' '.$phpArgs : '').' '.$console.' '.$cmd);
+        $process = new Process($php . ($phpArgs ? ' ' . $phpArgs : '') . ' ' . $console . ' ' . $cmd);
         $process->mustRun();
 
         return $process->getOutput();
@@ -107,10 +106,9 @@ class PluginRegister
     public function refreshInstalledPluginConfiguration()
     {
         $plugins = $this->biz->service('CodeagesPluginBundle:AppService')->findAllPlugins();
-
         $installeds = array();
         foreach ($plugins as $plugin) {
-            if ($plugin['code'] == 'MAIN' || $plugin['protocol'] < 3) {
+            if ($plugin['protocol'] < 3) {
                 continue;
             }
             $installeds[$plugin['code']] = array(
@@ -121,7 +119,7 @@ class PluginRegister
             );
         }
 
-        $manager = new PluginConfigurationManager(dirname($this->pluginRootDir).'/app');
+        $manager = new PluginConfigurationManager(dirname($this->pluginRootDir) . '/app');
         $manager->setInstalledPlugins($installeds)->save();
 
         $this->refreshInstalledPluginRouting($installeds);
@@ -143,14 +141,14 @@ class PluginRegister
 
                 if ($fs->exists($filePath)) {
                     $routing["_plugin_{$plugin['code']}_{$prefix}"] = array(
-                        'resource' => '@'.$resourcePath,
-                        'prefix' => '/'.$prefix,
+                        'resource' => '@' . $resourcePath,
+                        'prefix' => '/' . $prefix,
                     );
                 }
             }
         }
 
-        $routingFile = $this->rootDir.'/app/config/routing_plugins.yml';
+        $routingFile = $this->rootDir . '/app/config/routing_plugins.yml';
 
         if (!$fs->exists($routingFile)) {
             $fs->touch($routingFile);
@@ -184,7 +182,7 @@ class PluginRegister
         }
 
         if (false !== $ini = php_ini_loaded_file()) {
-            $arguments[] = '--php-ini='.$ini;
+            $arguments[] = '--php-ini=' . $ini;
         }
 
         return $arguments;
@@ -192,11 +190,11 @@ class PluginRegister
 
     public function getPluginDirectory($code)
     {
-        return $this->pluginRootDir.DIRECTORY_SEPARATOR.ucfirst($code).'Plugin';
+        return $this->pluginRootDir . DIRECTORY_SEPARATOR . ucfirst($code) . 'Plugin';
     }
 
     public function getPluginMetasFile($code)
     {
-        return $this->getPluginDirectory($code).DIRECTORY_SEPARATOR.'plugin.json';
+        return $this->getPluginDirectory($code) . DIRECTORY_SEPARATOR . 'plugin.json';
     }
 }
