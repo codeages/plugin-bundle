@@ -13,14 +13,14 @@ class OldAppDaoImpl extends GeneralDaoImpl implements OldAppDao
         return $this->getByFields(array('code' => $code));
     }
 
-    public function findByTypes($types = array(), $start, $limit)
+    public function findByType($type, $start, $limit)
     {
-        return $this->search(array('types' => $types), array('installedTime' => 'ASC'), $start, $limit);
+        return $this->search(array('type' => $type), array('installedTime' => 'ASC'), $start, $limit);
     }
 
-    public function countByTypes($types = array())
+    public function countByType($type)
     {
-        return $this->count(array('types' => $types));
+        return $this->count(array('type' => $type));
     }
 
     public function declares()
@@ -32,7 +32,6 @@ class OldAppDaoImpl extends GeneralDaoImpl implements OldAppDao
             'conditions' => array(
                 'type = :type',
                 'name = :name',
-                'type IN ( :types)'
             ),
         );
     }

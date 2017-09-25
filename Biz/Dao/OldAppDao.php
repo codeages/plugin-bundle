@@ -7,7 +7,7 @@ interface OldAppDao extends GeneralDaoInterface
 {
     public function getByCode($code);
 
-    public function findByTypes($types = array(), $start, $limit);
+    public function findByType($type, $start, $limit);
 
-    public function countByTypes($types = array());
+    public function countByType($type);
 }

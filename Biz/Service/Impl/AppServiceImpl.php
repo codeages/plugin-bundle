@@ -18,12 +18,12 @@ class AppServiceImpl extends BaseService implements AppService
 
     public function findAllPlugins()
     {
-        $total = $this->getAppDao()->countByTypes(array('plugin', 'theme'));
+        $total = $this->getAppDao()->countByType('plugin');
         if (empty($total)) {
             return array();
         }
 
-        return $this->getAppDao()->findByTypes(array('plugin', 'theme'), 0, $total);
+        return $this->getAppDao()->findByType('plugin', 0, $total);
     }
 
     public function registerPlugin($plugin)
