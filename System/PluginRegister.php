@@ -126,6 +126,11 @@ class PluginRegister
         $this->refreshInstalledPluginRouting($installeds);
     }
 
+    public function refreshDefaultRoles()
+    {
+        $plugins = $this->biz->service('Role:RoleService')->refreshRoles();
+    }
+
     protected function refreshInstalledPluginRouting($plugins)
     {
         $fs = new Filesystem();
