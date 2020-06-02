@@ -38,6 +38,10 @@ class PluginRemoveCommand extends ContainerAwareCommand
         $output->write('  - Refresh plugin cache.');
         $register->refreshInstalledPluginConfiguration();
         $output->writeln('<info>[Ok]</info>');
+        
+        $output->write('  - Refresh default roles.');
+        $installer->refreshDefaultRoles();
+        $output->writeln('  <info>[Ok]</info>');
 
         $output->writeln("<info>Finished!</info>\n");
     }

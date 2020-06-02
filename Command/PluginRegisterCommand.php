@@ -67,6 +67,10 @@ class PluginRegisterCommand extends ContainerAwareCommand
         $output->write('  - Refresh plugin cache.');
         $installer->refreshInstalledPluginConfiguration();
         $output->writeln($executed ? '  <info>[Ok]</info>' : '  <info>[Ignore]</info>');
+        
+        $output->write('  - Refresh default roles.');
+        $installer->refreshDefaultRoles();
+        $output->writeln('  <info>[Ok]</info>');
 
         $output->writeln("<info>Finished!</info>\n");
     }
