@@ -63,6 +63,7 @@ class FrameworkExtension extends BaseFrameworkExtension
 
         $options = $translator->getArgument(4);
         
+        //此处代码因教培Symfony版本(3.4)升级时, 未兼容企培版本, 此处增加兼容企培版本
         $isNewVersion = 1;
         if(empty($options)){
             $isNewVersion = 0;
