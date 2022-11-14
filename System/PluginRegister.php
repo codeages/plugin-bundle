@@ -132,7 +132,7 @@ class PluginRegister
         $routing = array();
 
         foreach ($plugins as $plugin) {
-            foreach (array('' => 'routing.yml', 'admin' => 'routing_admin.yml', 'admin/v2' => 'routing_admin_v2.yml') as $prefix => $filename) {
+            foreach (array('' => 'routing.yml', 'admin' => 'routing_admin.yml', 'admin/v2' => 'routing_admin_v2.yml', 'api_v3' => 'api_v3_routing.yml') as $prefix => $filename) {
                 if ($plugin['protocol'] < 3) {
                     continue;
                 }
