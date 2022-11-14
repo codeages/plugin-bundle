@@ -62,8 +62,19 @@ class FrameworkExtension extends BaseFrameworkExtension
         }
 
         $options = $translator->getArgument(4);
+        
+        //此处代码因教培Symfony版本(3.4)升级时, 未兼容企培版本, 此处增加兼容企培版本
+        $isNewVersion = 1;
+        if(empty($options)){
+            $isNewVersion = 0;
+            $options = $translator->getArgument(3);            
+        }
         $options['resource_files'] = array_merge($options['resource_files'], $files);
 
-        $translator->replaceArgument(4, $options);
+        if($isNewVersion == 0){
+            $translator->replaceArgument(3, $options);
+        }else{
+            $translator->replaceArgument(4, $options);
+        }
     }
 }
