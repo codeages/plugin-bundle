@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class TestKernel extends Kernel implements PluginableHttpKernelInterface
 {
-    public function registerBundles()
+    public function registerBundles(): iterable
     {
         $bundles = [
             new FrameworkBundle(),

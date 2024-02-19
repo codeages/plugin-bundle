@@ -10,7 +10,7 @@ class ThemeTwigLoaderTest extends WebTestCase
     public function testRenderThemeDirTwigFile()
     {
         $loader = $this->getMockBuilder('Codeages\PluginBundle\Loader\ThemeTwigLoader')
-            ->setMethods(['getCustomFile'])
+            ->onlyMethods(['getCustomFile'])
             ->setConstructorArgs([$this->mockKernel()])
             ->getMockForAbstractClass();
 
