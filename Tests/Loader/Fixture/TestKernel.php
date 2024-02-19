@@ -12,9 +12,9 @@ class TestKernel extends Kernel implements PluginableHttpKernelInterface
 {
     public function registerBundles()
     {
-        $bundles = array(
+        $bundles = [
             new FrameworkBundle(),
-        );
+        ];
 
         return $bundles;
     }

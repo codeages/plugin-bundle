@@ -12,11 +12,11 @@ class SlotInjectionCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->removeCache($cacheDir);
 
-        $files = array(
+        $files = [
             __DIR__.'/Fixtures/slot_1.yml',
             __DIR__.'/Fixtures/slot_2.yml',
             __DIR__.'/Fixtures/slot_3.yml',
-        );
+        ];
 
         $collector = new SlotInjectionCollector($files, $cacheDir, true);
 

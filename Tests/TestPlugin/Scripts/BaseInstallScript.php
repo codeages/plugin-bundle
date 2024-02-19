@@ -14,7 +14,7 @@ class BaseInstallScript
 
     public function setInstallMode($mode)
     {
-        if (!in_array($mode, array('appstore', 'command'))) {
+        if (!in_array($mode, ['appstore', 'command'])) {
             throw new \RuntimeException("{$mode} is not validate install mode.");
         }
 

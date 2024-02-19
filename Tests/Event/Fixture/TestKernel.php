@@ -2,11 +2,11 @@
 
 namespace Codeages\PluginBundle\Tests\Event\Fixture;
 
-use Symfony\Component\HttpKernel\Kernel;
-use Codeages\PluginBundle\System\PluginableHttpKernelInterface;
 use Codeages\PluginBundle\FrameworkBundle;
-use Symfony\Component\Config\Loader\LoaderInterface;
+use Codeages\PluginBundle\System\PluginableHttpKernelInterface;
 use Codeages\PluginBundle\System\PluginConfigurationManager;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpKernel\Kernel;
 
 class TestKernel extends Kernel implements PluginableHttpKernelInterface
 {
@@ -17,9 +17,9 @@ class TestKernel extends Kernel implements PluginableHttpKernelInterface
 
     public function registerBundles()
     {
-        $bundles = array(
+        $bundles = [
             new FrameworkBundle(),
-        );
+        ];
 
         return $bundles;
     }

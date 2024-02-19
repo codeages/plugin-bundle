@@ -2,18 +2,18 @@
 
 namespace Codeages\PluginBundle\Tests\Event\Fixture\DemoEvent;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Codeages\Biz\Framework\Event\Event;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class TestOneEventSubscribers implements EventSubscriberInterface
 {
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             'test1' => 'onTest1',
-            'test2' => array('onTest2', -100),
-            'test3' => array('onTest3', 100),
-        );
+            'test2' => ['onTest2', -100],
+            'test3' => ['onTest3', 100],
+        ];
     }
 
     public function onTest1(Event $event)

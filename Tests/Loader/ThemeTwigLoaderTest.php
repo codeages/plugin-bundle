@@ -10,8 +10,8 @@ class ThemeTwigLoaderTest extends WebTestCase
     public function testRenderThemeDirTwigFile()
     {
         $loader = $this->getMockBuilder('Codeages\PluginBundle\Loader\ThemeTwigLoader')
-            ->setMethods(array('getCustomFile'))
-            ->setConstructorArgs(array($this->mockKernel()))
+            ->setMethods(['getCustomFile'])
+            ->setConstructorArgs([$this->mockKernel()])
             ->getMockForAbstractClass();
 
         $loader->method('getCustomFile')->willReturn(null);  // let custom file not found
@@ -30,15 +30,15 @@ class ThemeTwigLoaderTest extends WebTestCase
     private function mockKernel()
     {
         $testKernel = $this->getMockBuilder('Codeages\PluginBundle\Tests\Loader\Fixture\TestKernel')
-            ->setConstructorArgs(array('test', true))
-            ->setMethods(array('getPluginConfigurationManager', 'getRootDir'))
+            ->setConstructorArgs(['test', true])
+            ->setMethods(['getPluginConfigurationManager', 'getRootDir'])
             ->getMockForAbstractClass();
 
         $testKernel->method('getRootDir')->willReturn(__DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'app');
 
         $pluginConfigurationManager = $this->getMockBuilder('Codeages\PluginBundle\System\PluginConfigurationManager')
-            ->setConstructorArgs(array(__DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'app'))
-            ->setMethods(array('getActiveThemeDirectory', 'getActiveThemeName'))
+            ->setConstructorArgs([__DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'app'])
+            ->setMethods(['getActiveThemeDirectory', 'getActiveThemeName'])
             ->getMock();
 
         $pluginConfigurationManager
