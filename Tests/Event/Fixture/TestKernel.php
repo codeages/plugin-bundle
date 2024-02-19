@@ -10,12 +10,12 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class TestKernel extends Kernel implements PluginableHttpKernelInterface
 {
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
         return dirname(__DIR__).'/app/cache';
     }
 
-    public function registerBundles()
+    public function registerBundles(): iterable
     {
         $bundles = [
             new FrameworkBundle(),

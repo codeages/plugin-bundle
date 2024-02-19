@@ -18,11 +18,13 @@ class LazySubscribersTest extends TestCase
         $container->set('kernel', $kernel);
 
         $lazySubscribers = $this->getMockBuilder('Codeages\PluginBundle\Event\LazySubscribers')
-            ->setMethods(['getEventMap'])
+            ->onlyMethods(['getEventMap'])
             ->setConstructorArgs([$container])
             ->getMockForAbstractClass();
         $lazySubscribers->method('getEventMap')
             ->willReturn([]);
+        $this->assertIsArray($lazySubscribers->getCallbacks('test'));
+        $this->assertEmpty($lazySubscribers->getCallbacks('test'));
     }
 
     public function testGetCallbacks()
@@ -45,40 +47,16 @@ class LazySubscribersTest extends TestCase
         }
 
         $test1 = [
-            0 => [
-                0 => 'test_two_event_subscribers',
-                1 => 'onTest1',
-                2 => 0,
-            ],
-            1 => [
-                0 => 'test_one_event_subscribers',
-                1 => 'onTest1',
-                2 => 0,
-            ],
+            ['test_one_event_subscribers', 'onTest1', 0],
+            ['test_two_event_subscribers', 'onTest1', 0],
         ];
         $test2 = [
-            0 => [
-                0 => 'test_two_event_subscribers',
-                1 => 'onTest2',
-                2 => 0,
-            ],
-            1 => [
-                0 => 'test_one_event_subscribers',
-                1 => 'onTest2',
-                2 => -100,
-            ],
+            ['test_two_event_subscribers', 'onTest2', 0],
+            ['test_one_event_subscribers', 'onTest2', -100],
         ];
         $test3 = [
-            0 => [
-                0 => 'test_one_event_subscribers',
-                1 => 'onTest3',
-                2 => 100,
-            ],
-            1 => [
-                0 => 'test_two_event_subscribers',
-                1 => 'onTest3',
-                2 => 0,
-            ],
+            ['test_one_event_subscribers', 'onTest3', 100],
+            ['test_two_event_subscribers', 'onTest3', 0],
         ];
 
         $test1Callbacks = $lazySubscribers->getCallbacks('test1');
@@ -99,7 +77,7 @@ class LazySubscribersTest extends TestCase
     {
         $testKernel = $this->getMockBuilder('Codeages\PluginBundle\Tests\Event\Fixture\TestKernel')
             ->setConstructorArgs(['test', false])
-            ->setMethods(['getCacheDir'])
+            ->onlyMethods(['getCacheDir'])
             ->getMockForAbstractClass();
 
         $testKernel->method('getCacheDir')
