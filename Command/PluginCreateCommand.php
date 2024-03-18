@@ -2,16 +2,31 @@
 
 namespace Codeages\PluginBundle\Command;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Sensio\Bundle\GeneratorBundle\Model\Bundle;
-use Sensio\Bundle\GeneratorBundle\Command\GeneratorCommand;
-use Sensio\Bundle\GeneratorBundle\Generator\BundleGenerator;
 
-class PluginCreateCommand extends GeneratorCommand
+class PluginCreateCommand extends Command
 {
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    public function __construct(ContainerInterface $container)
+{
+        $this->container = $container;
+        parent::__construct();
+    }
+
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
     protected function configure()
     {
         $this
@@ -22,7 +37,6 @@ class PluginCreateCommand extends GeneratorCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $biz = $this->getContainer()->get('biz');
         $code = $input->getArgument('code');
 
         if (!$code) {
@@ -35,7 +49,7 @@ class PluginCreateCommand extends GeneratorCommand
 
         $name = ucfirst($code);
         $pluginName = $name.'Plugin';
-        $rootDir = dirname($this->getContainer()->getParameter('kernel.root_dir'));
+        $rootDir = dirname($this->container->getParameter('kernel.root_dir'));
 
         $output->writeln(sprintf('Create plugin <comment>%s</comment> :', $name));
 

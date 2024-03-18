@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class LazySubscribersTest extends TestCase
 {
+    const CACHE_DIR = __DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'cache';
+
     public function testGetEventMapWithoutService()
     {
         $kernel = $this->mockKernel();
@@ -68,9 +70,8 @@ class LazySubscribersTest extends TestCase
         $test3Callbacks = $lazySubscribers->getCallbacks('test3');
         $this->assertEquals($test3, $test3Callbacks);
 
-        $cacheFileDir = __DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'cache';
-        unlink($cacheFileDir.DIRECTORY_SEPARATOR.'event_map.php');
-        unlink($cacheFileDir.DIRECTORY_SEPARATOR.'event_map.php.meta');
+        unlink(self::CACHE_DIR.DIRECTORY_SEPARATOR.'event_map.php');
+        unlink(self::CACHE_DIR.DIRECTORY_SEPARATOR.'event_map.php.meta');
     }
 
     private function mockKernel()
@@ -81,7 +82,15 @@ class LazySubscribersTest extends TestCase
             ->getMockForAbstractClass();
 
         $testKernel->method('getCacheDir')
-            ->willReturn(__DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'cache');
+            ->willReturn(self::CACHE_DIR);
+
+        if (file_exists(self::CACHE_DIR.DIRECTORY_SEPARATOR.'event_map.php')) {
+            unlink(self::CACHE_DIR.DIRECTORY_SEPARATOR.'event_map.php');
+        }
+
+        if (file_exists(self::CACHE_DIR.DIRECTORY_SEPARATOR.'event_map.php.meta')) {
+            unlink(self::CACHE_DIR.DIRECTORY_SEPARATOR.'event_map.php.meta');
+        }
 
         return $testKernel;
     }

@@ -34,7 +34,7 @@ class ThemeTwigLoader extends FileSystemLoader
 
         if ($file === false || null === $file) {
             if ($throw) {
-                throw new \Twig_Error_Loader(sprintf('Unable to find template "%s".', $logicalName));
+                throw new \Twig\Error\LoaderError(sprintf('Unable to find template "%s".', $logicalName));
             }
 
             return false;

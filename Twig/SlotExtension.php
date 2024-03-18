@@ -2,7 +2,9 @@
 
 namespace Codeages\PluginBundle\Twig;
 
-class SlotExtension extends \Twig_Extension
+use Twig\Extension\AbstractExtension;
+
+class SlotExtension extends AbstractExtension
 {
     protected $manager;
 
@@ -14,7 +16,7 @@ class SlotExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('slot', array($this, 'slot'), array('is_safe' => array('html'))),
+            new \Twig\TwigFunction('slot', array($this, 'slot'), array('is_safe' => array('html'))),
         );
     }
 

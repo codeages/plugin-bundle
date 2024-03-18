@@ -4,7 +4,9 @@ namespace Codeages\PluginBundle\Twig;
 
 use Codeages\Biz\Framework\DataStructure\UniquePriorityQueue;
 
-class HtmlExtension extends \Twig_Extension
+use Twig\Extension\AbstractExtension;
+
+class HtmlExtension extends AbstractExtension
 {
     protected $scripts = array();
 
@@ -21,8 +23,8 @@ class HtmlExtension extends \Twig_Extension
         $options = array('is_safe' => array('html'));
 
         return array(
-            new \Twig_SimpleFunction('script', array($this, 'script')),
-            new \Twig_SimpleFunction('css', array($this, 'css')),
+            new \Twig\TwigFunction('script', array($this, 'script')),
+            new \Twig\TwigFunction('css', array($this, 'css')),
         );
     }
 

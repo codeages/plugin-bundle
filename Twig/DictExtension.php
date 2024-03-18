@@ -2,23 +2,30 @@
 
 namespace Codeages\PluginBundle\Twig;
 
-class DictExtension extends \Twig_Extension
+use Symfony\Component\HttpFoundation\RequestStack;
+use Twig\Extension\AbstractExtension;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Codeages\PluginBundle\System\DictCollector;
+
+class DictExtension extends AbstractExtension
 {
     protected $collector;
     protected $locale;
     protected $container;
+    protected $requestStack;
 
-    public function __construct($collector, $container)
+    public function __construct(DictCollector $collector, ContainerInterface $container, RequestStack $requestStack)
     {
         $this->collector = $collector;
         $this->container = $container;
+        $this->requestStack = $requestStack;
     }
 
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('dict', array($this, 'getDict')),
-            new \Twig_SimpleFunction('dict_text', array($this, 'getDictText'), array('is_safe' => array('html'))),
+            new \Twig\TwigFunction('dict', array($this, 'getDict')),
+            new \Twig\TwigFunction('dict_text', array($this, 'getDictText'), array('is_safe' => array('html'))),
         );
     }
 
@@ -44,8 +51,7 @@ class DictExtension extends \Twig_Extension
     private function getLocale()
     {
         if (!$this->locale) {
-            $locale = $this->container->get('request')->getLocale();
-            $this->locale = $locale;
+            $this->locale = $this->requestStack->getMainRequest()->getLocale();
         }
 
         return $this->locale;

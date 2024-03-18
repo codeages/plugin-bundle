@@ -3,7 +3,6 @@
 namespace Codeages\PluginBundle\Event;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -19,18 +18,8 @@ class LazyDispatcher extends EventDispatcher implements EventDispatcherInterface
         $this->container = $container;
     }
 
-    public function dispatch($eventName, Event $event = null)
+    public function dispatch(object $event, ?string $eventName = null): object
     {
-        if (null === $event) {
-            $event = new Event();
-        }
-
-        /**
-         * 已经在symfony3.0 废弃,禁止使用
-         */
-        // $event->setDispatcher($this);
-        // $event->setName($eventName);
-
         $subscribers = $this->container->get('codeags_plugin.event.lazy_subscribers');
 
         $callbacks = $subscribers->getCallbacks($eventName);

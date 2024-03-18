@@ -1,4 +1,10 @@
 services:
+    Codeages\PluginBundle\Command\:
+        resource: '../../Command/*'
+        arguments:
+            - "@service_container"
+        tags: ['console.command']
+
     codeages_plugin.dict_collector:
         class: Codeages\PluginBundle\System\DictCollector
         arguments:
@@ -25,7 +31,7 @@ services:
         public: false
         tags:
             - { name: twig.extension }
-  
+
     codeages_plugin.slot_twig_extension:
         class: Codeages\PluginBundle\Twig\SlotExtension
         public: false
@@ -40,6 +46,7 @@ services:
         arguments:
             - "@codeages_plugin.dict_collector"
             - "@service_container"
+            - '@request_stack'
 
         tags:
             - { name: twig.extension }
