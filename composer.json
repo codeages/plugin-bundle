@@ -21,6 +21,7 @@
     "symfony/framework-bundle": "^5.4.35",
     "symfony/yaml": "^5.4.35",
     "symfony/config": "^5.4.35",
+    "symfony/process": "^5.4.35",
     "codeages/biz-framework": "^0.12"
   },
   "require-dev": {

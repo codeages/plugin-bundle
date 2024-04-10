@@ -14,7 +14,7 @@ class EventSubscriberPassTest extends TestCase
         ];
         $definition = $this->getMockBuilder('Symfony\Component\DependencyInjection\Definition')->getMock();
 
-        $builder = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')->setMethods(['findTaggedServiceIds', 'getDefinition'])->getMock();
+        $builder = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')->onlyMethods(['findTaggedServiceIds', 'getDefinition'])->getMock();
 
         $builder->expects($this->atLeastOnce())
             ->method('findTaggedServiceIds')

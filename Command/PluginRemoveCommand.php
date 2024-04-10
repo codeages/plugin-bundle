@@ -57,5 +57,7 @@ class PluginRemoveCommand extends Command
         $output->writeln('<info>[Ok]</info>');
 
         $output->writeln("<info>Finished!</info>\n");
+
+        return 0;
     }
 }

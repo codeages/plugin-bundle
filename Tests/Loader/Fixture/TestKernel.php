@@ -19,6 +19,11 @@ class TestKernel extends Kernel implements PluginableHttpKernelInterface
         return $bundles;
     }
 
+    public function getRootDir()
+    {
+        return $this->getProjectDir() . '/app';
+    }
+
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load(__DIR__.'/app/config/config.yml');

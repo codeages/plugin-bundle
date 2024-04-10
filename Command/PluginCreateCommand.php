@@ -125,6 +125,8 @@ class PluginCreateCommand extends Command
         }
 
         $output->writeln("<info>Finished!</info>\n");
+
+        return 0;
     }
 
     /**

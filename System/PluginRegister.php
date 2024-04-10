@@ -91,7 +91,7 @@ class PluginRegister
         $console = escapeshellarg($consoleDir.'/console');
         $cmd = 'assets:install --symlink --relative web';
 
-        $process = new Process($php.($phpArgs ? ' '.$phpArgs : '').' '.$console.' '.$cmd);
+        $process = Process::fromShellCommandline($php.($phpArgs ? ' '.$phpArgs : '').' '.$console.' '.$cmd);
         $process->mustRun();
 
         return $process->getOutput();

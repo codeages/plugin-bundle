@@ -31,14 +31,14 @@ class ThemeTwigLoaderTest extends WebTestCase
     {
         $testKernel = $this->getMockBuilder('Codeages\PluginBundle\Tests\Loader\Fixture\TestKernel')
             ->setConstructorArgs(['test', true])
-            ->setMethods(['getPluginConfigurationManager', 'getRootDir'])
+            ->onlyMethods(['getPluginConfigurationManager', 'getRootDir'])
             ->getMockForAbstractClass();
 
         $testKernel->method('getRootDir')->willReturn(__DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'app');
 
         $pluginConfigurationManager = $this->getMockBuilder('Codeages\PluginBundle\System\PluginConfigurationManager')
             ->setConstructorArgs([__DIR__.DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'app'])
-            ->setMethods(['getActiveThemeDirectory', 'getActiveThemeName'])
+            ->onlyMethods(['getActiveThemeDirectory', 'getActiveThemeName'])
             ->getMock();
 
         $pluginConfigurationManager

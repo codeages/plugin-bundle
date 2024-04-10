@@ -86,5 +86,7 @@ class PluginRegisterCommand extends Command
         $output->writeln($content);
 
         $output->writeln("<info>Finished!</info>\n");
+
+        return 0;
     }
 }
