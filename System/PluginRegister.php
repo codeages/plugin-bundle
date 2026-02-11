@@ -2,6 +2,7 @@
 
 namespace Codeages\PluginBundle\System;
 
+use Phpmig\Adapter\Doctrine\DBAL;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Filesystem\Filesystem;
@@ -9,6 +10,8 @@ use Symfony\Component\Yaml\Yaml;
 
 class PluginRegister
 {
+    protected $rootDir;
+
     protected $pluginRootDir;
 
     protected $biz;
@@ -81,6 +84,40 @@ class PluginRegister
         return true;
     }
 
+    public function insertMigrationVersions($code)
+    {
+        $migrationsDir = $this->getPluginDirectory($code).DIRECTORY_SEPARATOR.'Migrations';
+        if (!is_dir($migrationsDir)) {
+            return false;
+        }
+
+        $versions = array();
+        foreach (glob($migrationsDir.DIRECTORY_SEPARATOR.'*.php') ?: array() as $path) {
+            if (preg_match('/^[0-9]+/', basename($path), $matches)) {
+                $versions[] = $matches[0];
+            }
+        }
+        if (empty($versions)) {
+            return false;
+        }
+
+        $adapter = new DBAL($this->biz['db'], 'migrations');
+        if (!$adapter->hasSchema()) {
+            $adapter->createSchema();
+        }
+
+        $db = $this->biz['db'];
+        $tableName = 'migrations';
+        foreach ($versions as $version) {
+            $exists = $db->fetchColumn("SELECT 1 FROM {$tableName} WHERE version = ? LIMIT 1", array($version));
+            if (!$exists) {
+                $db->insert($tableName, array('version' => $version));
+            }
+        }
+
+        return true;
+    }
+
     public function installAssets($code)
     {
         $php = escapeshellarg($this->getPhp(false));
@@ -109,6 +146,9 @@ class PluginRegister
         $plugins = $this->biz->service('CodeagesPluginBundle:AppService')->findAllPlugins();
         $installeds = array();
         foreach ($plugins as $plugin) {
+            if ($plugin['code'] == 'TRAININGMAIN' || $plugin['protocol'] < 3) {
+                continue;
+            }
             if ($plugin['protocol'] < 3) {
                 continue;
             }

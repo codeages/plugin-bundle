@@ -5,6 +5,7 @@ namespace Codeages\PluginBundle\System\Slot;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
+#[\AllowDynamicProperties]
 class SlotInjection implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
