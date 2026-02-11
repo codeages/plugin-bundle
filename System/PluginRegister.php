@@ -2,7 +2,6 @@
 
 namespace Codeages\PluginBundle\System;
 
-use Phpmig\Adapter\Doctrine\DBAL;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Filesystem\Filesystem;
@@ -101,13 +100,10 @@ class PluginRegister
             return false;
         }
 
-        $adapter = new DBAL($this->biz['db'], 'migrations');
-        if (!$adapter->hasSchema()) {
-            $adapter->createSchema();
-        }
-
         $db = $this->biz['db'];
         $tableName = 'migrations';
+        $db->exec("CREATE TABLE IF NOT EXISTS `{$tableName}` (`version` VARCHAR(255) NOT NULL)");
+
         foreach ($versions as $version) {
             $exists = $db->fetchColumn("SELECT 1 FROM {$tableName} WHERE version = ? LIMIT 1", array($version));
             if (!$exists) {
