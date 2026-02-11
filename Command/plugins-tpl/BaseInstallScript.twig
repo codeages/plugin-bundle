@@ -15,7 +15,7 @@ abstract class BaseInstallScript
 
     public function __construct($biz)
     {
-        $this->biz  = $biz;
+        $this->biz = $biz;
         $this->meta = json_decode(file_get_contents(__DIR__.'/../plugin.json'), true);
     }
 
@@ -36,7 +36,7 @@ abstract class BaseInstallScript
 
     public function setInstallMode($mode)
     {
-        if (!in_array($mode, array('appstore', 'command'))) {
+        if (!in_array($mode, ['appstore', 'command'])) {
             throw new \RuntimeException("$mode is not validate install mode.");
         }
 
@@ -49,7 +49,7 @@ abstract class BaseInstallScript
 
         $rootDir = realpath($this->biz['root_directory']);
 
-        $originDir = "{$rootDir}/plugins/{$code}Plugin/Resources/static-dist";
+        $originDir = "{$rootDir}/plugins/{$code}Plugin/Resources/static-dist".strtolower($code).'plugin';
         if (!is_dir($originDir)) {
             return false;
         }
@@ -61,10 +61,10 @@ abstract class BaseInstallScript
             $filesystem->remove($targetDir);
         }
 
-        if ($this->installMode == 'command') {
+        if ('command' == $this->installMode) {
             $filesystem->symlink($filesystem->makePathRelative($originDir, realpath(dirname($targetDir))), $targetDir, true);
         } else {
-            $filesystem->mirror($originDir, $targetDir, null, array('override' => true, 'delete' => true));
+            $filesystem->mirror($originDir, $targetDir, null, ['override' => true, 'delete' => true]);
         }
     }
 

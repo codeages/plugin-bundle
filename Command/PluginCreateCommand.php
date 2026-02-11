@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class PluginCreateCommand extends Command
 {
@@ -17,7 +18,7 @@ class PluginCreateCommand extends Command
     private $container;
 
     public function __construct(ContainerInterface $container)
-{
+    {
         $this->container = $container;
         parent::__construct();
     }
@@ -53,28 +54,12 @@ class PluginCreateCommand extends Command
 
         $output->writeln(sprintf('Create plugin <comment>%s</comment> :', $name));
 
-        $generator = $this->getGenerator();
-        $bundleObject = $this->createBundleObject($name);
-        $generator->generateBundle($bundleObject);
+        $bundles = $this->createBundleObject($name);
 
-        $errors = array();
-        $this->getQuestionHelper()->getRunner($output, $errors);
+        $errors = [];
 
-        $dir = $bundleObject->getTargetDirectory();
-
-        //write jspn
+        $dir = $bundles['dir'].'/'.$pluginName;
         $filename = $dir.'/plugin.json';
-
-        $data = '{
-            "code": "'.$name.'",
-            "name": "'.$name.'",
-            "description": "",
-            "author": "EduSoho官方",
-            "version": "1.0.0",
-            "support_version": "8.0.0"
-        }';
-
-        file_put_contents($filename, $data);
 
         //mkdir script
         $this->filesystem = new Filesystem();
@@ -93,8 +78,20 @@ class PluginCreateCommand extends Command
         $this->filesystem->mkdir($dir.'/Resources/static-src');
         $this->filesystem->mkdir($dir.'/Resources/static-src/js');
         $this->filesystem->mkdir($dir.'/Resources/static-src/img');
+        $this->filesystem->mkdir($dir.'/Resources/config');
         $this->filesystem->touch($dir.'/Resources/config/slots.yml');
+        $this->filesystem->touch($dir.'/plugin.json');
 
+        $data = '{
+            "code": "'.$name.'",
+            "name": "'.$name.'",
+            "description": "",
+            "author": "EduSoho官方",
+            "version": "1.0.0",
+            "support_version": "8.0.0"
+        }';
+
+        file_put_contents($filename, $data);
         $tplDir = dirname(__FILE__);
 
         $data = $this->getBaseInstallScript($tplDir);
@@ -142,19 +139,9 @@ class PluginCreateCommand extends Command
         $dir = dirname($this->getContainer()->getParameter('kernel.root_dir'));
         $dir = $dir.'/plugins';
         $format = 'yml';
+        $shared = true;
 
-        return new Bundle(
-            $namespace,
-            $bundle,
-            $dir,
-            $format,
-            $shared = true
-        );
-    }
-
-    protected function createGenerator()
-    {
-        return new BundleGenerator($this->getContainer()->get('filesystem'));
+        return ['bundle' => $bundle, 'namespace' => $namespace, 'dir' => $dir, 'format' => $format, 'shared' => $shared];
     }
 
     private function getData($data, $pluginName)

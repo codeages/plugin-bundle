@@ -8,6 +8,8 @@ class SlotManager
 
     protected $collector;
 
+    protected $container;
+
     public function __construct($collector, $container)
     {
         $this->collector = $collector;
@@ -21,7 +23,7 @@ class SlotManager
             return '';
         }
 
-        $contents = array();
+        $contents = [];
 
         foreach ($injections as $name => $class) {
             $injection = new $class();

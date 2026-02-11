@@ -68,6 +68,10 @@ class PluginRegisterCommand extends Command
         $executed = $installer->executeScript($code);
         $output->writeln($executed ? '  <info>[Ok]</info>' : '  <info>[Ignore]</info>');
 
+        $output->write('  - Insert plugin migration versions.');
+        $executed = $installer->insertMigrationVersions($code);
+        $output->writeln($executed ? '  <info>[Ok]</info>' : '  <info>[Ignore]</info>');
+
         $output->write('  - Install block.');
         BlockToolkit::init($installer->getPluginDirectory($code).'/block.json', $this->getContainer());
         $output->writeln('  <info>[Ok]</info>');
@@ -78,7 +82,7 @@ class PluginRegisterCommand extends Command
 
         $output->write('  - Refresh plugin cache.');
         $installer->refreshInstalledPluginConfiguration();
-        $output->writeln($executed ? '  <info>[Ok]</info>' : '  <info>[Ignore]</info>');
+        $output->writeln($app ? '  <info>[Ok]</info>' : '  <info>[Ignore]</info>');
         
         $output->write('  - Install assets.');
         $content = $installer->installAssets($code);
