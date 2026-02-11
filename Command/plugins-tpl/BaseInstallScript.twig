@@ -49,12 +49,12 @@ abstract class BaseInstallScript
 
         $rootDir = realpath($this->biz['root_directory']);
 
-        $originDir = "{$rootDir}/plugins/{$code}Plugin/Resources/static-dist".strtolower($code).'plugin';
+        $originDir = $rootDir.'/plugins/'.ucfirst($code).'Plugin/Resources/static-dist/'.strtolower($code).'plugin';
         if (!is_dir($originDir)) {
-            return false;
+            return;
         }
 
-        $targetDir = "{$rootDir}/web/static-dist/".strtolower($code).'plugin';
+        $targetDir = $rootDir.'/web/static-dist/'.strtolower($code).'plugin';
 
         $filesystem = new Filesystem();
         if ($filesystem->exists($targetDir)) {
